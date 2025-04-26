@@ -1,0 +1,130 @@
+services:
+  live-server-dev:
+    build:
+      context: .
+    container_name: web_live_server_dev
+    stdin_open: true # Keep stdin open
+    tty: true        # Allocate a pseudo-TTY    
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./src:/app/src:rw
+    command: >
+      sh -c "cd /app/src && \
+             live-server \
+               --port=8080 \
+               --host=0.0.0.0 \
+               --no-browser \
+               --watch=. \
+               --wait=100"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    init: true       # Use an init system like tini    
+    restart: unless-stopped
+    networks:
+      - dev-network
+
+  flask-dev:
+    build:
+      context: .
+    container_name: web_flask_dev
+    stdin_open: true # Keep stdin open
+    tty: true        # Allocate a pseudo-TTY
+    env_file:
+      - ./.env       # Load variables from a local .env file
+    environment:
+      - FLASK_ENV=development
+      - PORT=8080
+    ports:
+      - "8082:8080"  # Map host 8082 to container 8080
+    volumes:
+      - .:/app:rw
+    command: ["gunicorn", "-w", "1", "--bind", "0.0.0.0:8080", "--reload", "app_flask:app"]
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    init: true       # Use an init system like tini    
+    restart: unless-stopped
+    networks:
+      - dev-network
+   
+  fastapi-dev:
+    build:
+      context: .
+    container_name: web_fastapi_dev
+    stdin_open: true # Keep stdin open
+    tty: true        # Allocate a pseudo-TTY
+    env_file:
+      - ./.env       # Load variables from a local .env file
+    environment:
+      - FLASK_ENV=development
+      - PORT=8080
+    ports:
+      - "8083:8080"  # Map host 8083 to container 8080
+    volumes:
+      - .:/app:rw
+    command: ["uvicorn", "app_fastapi:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    init: true       # Use an init system like tini    
+    restart: unless-stopped
+    networks:
+      - dev-network
+
+  node-dev:
+    build:
+      context: .
+    container_name: web_node_dev
+    env_file:
+      - ./.env       # Load variables from a local .env file
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+    ports:
+      - "8084:8080"  # Map host 8084 to container 8080
+    volumes:
+      - .:/app:rw
+      - /app/node_modules
+    command: sh -c "npm install cors && npm run dev"
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    init: true       # Use an init system like tini    
+    restart: unless-stopped
+    networks:
+      - dev-network
+
+  # Optional reverse proxy service
+#  nginx:
+#    image: nginx:alpine
+#    container_name: web_proxy
+#    ports:
+#      - "8080:80"
+#    volumes:
+#      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+#    depends_on:
+#      - live-server-dev
+#      - flask-dev
+#      - fastapi-dev
+#      - node-dev
+#    restart: unless-stopped
+#    networks:
+#      - dev-network
+
+networks:
+  dev-network:
+    driver: bridge

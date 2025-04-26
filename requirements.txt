@@ -1,0 +1,7 @@
+flask==3.0.2
+fastapi==0.115.7
+gunicorn==22.0.0
+requests==2.31.0
+uvicorn[standard]==0.34.0
+flask-cors==4.0.0
+pytest==8.0.1

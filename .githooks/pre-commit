@@ -1,0 +1,80 @@
+#!/bin/sh
+
+# Pre-commit Git hook for development environment
+# Install with: git config core.hooksPath .githooks
+
+echo "Running pre-commit hooks..."
+
+# Check for Python syntax errors
+echo "Checking Python syntax..."
+FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.py$')
+if [ -n "$FILES" ]; then
+    python -m flake8 $FILES
+    if [ $? -ne 0 ]; then
+        echo "Python syntax check failed! Fix errors before committing."
+        exit 1
+    fi
+fi
+
+# Check JavaScript syntax
+echo "Checking JavaScript syntax..."
+FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.js$')
+if [ -n "$FILES" ]; then
+    if command -v npx >/dev/null 2>&1; then
+        npx eslint $FILES
+        if [ $? -ne 0 ]; then
+            echo "JavaScript syntax check failed! Fix errors before committing."
+            exit 1
+        fi
+    else
+        echo "npx not found, skipping JavaScript syntax check"
+    fi
+fi
+
+# Check for Docker Compose syntax errors
+echo "Checking Docker Compose syntax..."
+FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E 'compose\.ya?ml$')
+if [ -n "$FILES" ]; then
+    if command -v docker-compose >/dev/null 2>&1; then
+        docker-compose -f $FILES config >/dev/null
+        if [ $? -ne 0 ]; then
+            echo "Docker Compose syntax check failed! Fix errors before committing."
+            exit 1
+        fi
+    else
+        echo "docker-compose not found, skipping Docker Compose syntax check"
+    fi
+fi
+
+# Check for large files
+echo "Checking for large files..."
+# Block files larger than 10MB
+git diff --cached --name-only | while read FILE; do
+    FILE_SIZE=$(git cat-file -s :$FILE)
+    if [ $FILE_SIZE -gt 10485760 ]; then
+        echo "Error: $FILE is larger than 10MB. Consider using Git LFS for large files."
+        exit 1
+    fi
+done
+
+# Prevent committing to main branch directly
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$BRANCH" = "main" ]; then
+    echo "You can't commit directly to the main branch!"
+    echo "Please create a feature branch and use a pull request instead."
+    exit 1
+fi
+
+# Check for .env files
+echo "Checking for .env files..."
+if git diff --cached --name-only | grep -q "\.env$"; then
+    echo "Warning: You're attempting to commit an .env file!"
+    echo "Environment files may contain sensitive information."
+    read -p "Do you want to continue? (y/n): " response
+    if [ "$response" != "y" ]; then
+        exit 1
+    fi
+fi
+
+echo "Pre-commit hooks completed successfully!"
+exit 0

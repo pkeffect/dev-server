@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development Environment Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dev Environment Dashboard</h1>
+            <p>Monitor and test all services in one place</p>
+        </header>
+
+        <div class="services">
+            <div class="service-card" id="live-server">
+                <h2>Live Server</h2>
+                <div class="status"><span class="dot"></span> Checking...</div>
+                <div class="details">
+                    <p>Port: 8081</p>
+                    <p>Type: Static HTML/JS</p>
+                </div>
+                <div class="actions">
+                    <a href="/" class="button">Home</a>
+                    <button class="button test-btn" data-service="live-server">Test</button>
+                </div>
+                <div class="response-data"></div>
+            </div>
+
+            <div class="service-card" id="flask">
+                <h2>Flask</h2>
+                <div class="status"><span class="dot"></span> Checking...</div>
+                <div class="details">
+                    <p>Port: 8082</p>
+                    <p>Type: Python Flask</p>
+                </div>
+                <div class="actions">
+                    <a href="http://localhost:8082" target="_blank" class="button">Open</a>
+                    <button class="button test-btn" data-service="flask">Test</button>
+                </div>
+                <div class="response-data"></div>
+            </div>
+
+            <div class="service-card" id="fastapi">
+                <h2>FastAPI</h2>
+                <div class="status"><span class="dot"></span> Checking...</div>
+                <div class="details">
+                    <p>Port: 8083</p>
+                    <p>Type: Python FastAPI</p>
+                </div>
+                <div class="actions">
+                    <a href="http://localhost:8083" target="_blank" class="button">Open</a>
+                    <a href="http://localhost:8083/docs" target="_blank" class="button">Docs</a>
+                    <button class="button test-btn" data-service="fastapi">Test</button>
+                </div>
+                <div class="response-data"></div>
+            </div>
+
+            <div class="service-card" id="nodejs">
+                <h2>Node.js Express</h2>
+                <div class="status"><span class="dot"></span> Checking...</div>
+                <div class="details">
+                    <p>Port: 8084</p>
+                    <p>Type: JavaScript Express</p>
+                </div>
+                <div class="actions">
+                    <a href="http://localhost:8084" target="_blank" class="button">Open</a>
+                    <button class="button test-btn" data-service="nodejs">Test</button>
+                </div>
+                <div class="response-data"></div>
+            </div>
+        </div>
+
+        <div class="test-panel">
+            <h2>Cross-Service Testing</h2>
+            <p>Test interactions between different services:</p>
+            <div class="test-actions">
+                <button id="test-all" class="button">Test All Services</button>
+                <button id="clear-results" class="button">Clear Results</button>
+            </div>
+            <div id="test-results" class="resizable">
+                <p>Results will appear here...</p>
+                <!-- Resize handle will be added by JavaScript -->
+            </div>
+        </div>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+</html>
