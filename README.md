@@ -11,9 +11,7 @@
 A containerized development environment for testing and developing applications across multiple server technologies simultaneously. This project provides hot-reloading development servers for HTML/CSS/JS, Python (Flask and FastAPI), and Node.js Express, all running in Docker containers with a unified dashboard for monitoring.
 
 <div align="center">
-
-![Dashboard Preview](https://via.placeholder.com/800x400?text=Development+Environment+Dashboard)
-
+<img src="https://github.com/pkeffect/poc/blob/main/img/dashboard.png" alt="Main Interface" width="600">
 </div>
 
 ## 📋 Table of Contents
