@@ -5,14 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Development Environment Dashboard</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Multi-Server Development Environment Dashboard</h1>
             <p>Monitor and test all services in one place</p>
-			<p>Dockerized, runs on multiple operating systems (Windows, macOS, Linux) for flexibility and accessibility</p>
-			<p>Hot-reloading of HTML/CSS/JS, Python (Flask and FastAPI), and Node.js Express servers with just code changes</p>
+            <div class="environment-info">
+                <span class="badge">Dockerized</span>
+                <span class="badge">Cross-Platform</span>
+                <span class="badge">Hot-Reload</span>
+            </div>
+            <p class="description">Development environment with hot-reloading servers for HTML/CSS/JS, Python (Flask and FastAPI), and Node.js Express</p>
         </header>
 
         <div class="services">
@@ -20,11 +25,12 @@
                 <h2>Live Server</h2>
                 <div class="status"><span class="dot"></span> Checking...</div>
                 <div class="details">
-                    <p>Port: 8081</p>
-                    <p>Type: Static HTML/JS/CSS</p>
+                    <p><strong>Port:</strong> 8081</p>
+                    <p><strong>Type:</strong> Static HTML/JS/CSS</p>
                 </div>
                 <div class="actions">
                     <a href="/" class="button">Home</a>
+                    <a href="/docs.html" target="_blank" class="button docs-button">API Docs</a>
                     <button class="button test-btn" data-service="live-server">Test</button>
                 </div>
                 <div class="response-data"></div>
@@ -34,11 +40,12 @@
                 <h2>Flask Server</h2>
                 <div class="status"><span class="dot"></span> Checking...</div>
                 <div class="details">
-                    <p>Port: 8082</p>
-                    <p>Type: Python Flask</p>
+                    <p><strong>Port:</strong> 8082</p>
+                    <p><strong>Type:</strong> Python Flask</p>
                 </div>
                 <div class="actions">
                     <a href="http://localhost:8082" target="_blank" class="button">Open</a>
+                    <a href="http://localhost:8082/docs" target="_blank" class="button docs-button">API Docs</a>
                     <button class="button test-btn" data-service="flask">Test</button>
                 </div>
                 <div class="response-data"></div>
@@ -48,12 +55,12 @@
                 <h2>FastAPI Server</h2>
                 <div class="status"><span class="dot"></span> Checking...</div>
                 <div class="details">
-                    <p>Port: 8083</p>
-                    <p>Type: Python FastAPI</p>
+                    <p><strong>Port:</strong> 8083</p>
+                    <p><strong>Type:</strong> Python FastAPI</p>
                 </div>
                 <div class="actions">
                     <a href="http://localhost:8083" target="_blank" class="button">Open</a>
-                    <a href="http://localhost:8083/docs" target="_blank" class="button">Docs</a>
+                    <a href="http://localhost:8083/docs" target="_blank" class="button docs-button">API Docs</a>
                     <button class="button test-btn" data-service="fastapi">Test</button>
                 </div>
                 <div class="response-data"></div>
@@ -63,11 +70,12 @@
                 <h2>Node Express Server</h2>
                 <div class="status"><span class="dot"></span> Checking...</div>
                 <div class="details">
-                    <p>Port: 8084</p>
-                    <p>Type: JavaScript Express</p>
+                    <p><strong>Port:</strong> 8084</p>
+                    <p><strong>Type:</strong> JavaScript Express</p>
                 </div>
                 <div class="actions">
                     <a href="http://localhost:8084" target="_blank" class="button">Open</a>
+                    <a href="http://localhost:8084/docs" target="_blank" class="button docs-button">API Docs</a>
                     <button class="button test-btn" data-service="nodejs">Test</button>
                 </div>
                 <div class="response-data"></div>
@@ -86,6 +94,30 @@
                 <!-- Resize handle will be added by JavaScript -->
             </div>
         </div>
+
+        <div class="api-documentation">
+            <h2>API Documentation</h2>
+            <p>Access comprehensive API documentation for all services:</p>
+            <div class="api-links">
+                <a href="/docs.html" target="_blank" class="button docs-button">Live Server API Docs</a>
+                <a href="http://localhost:8082/docs" target="_blank" class="button docs-button">Flask API Docs</a>
+                <a href="http://localhost:8083/docs" target="_blank" class="button docs-button">FastAPI Docs</a>
+                <a href="http://localhost:8084/docs" target="_blank" class="button docs-button">Node.js API Docs</a>
+            </div>
+        </div>
+
+        <div class="debug-tools">
+            <h2>Troubleshooting Tools</h2>
+            <p>Use these tools to diagnose connection issues between services:</p>
+            <div class="debug-links">
+                <a href="/debug.html" target="_blank" class="button debug-button">Service Connectivity Debug</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>Development Environment v1.2.0 | <a href="https://github.com/yourusername/dev-environment" target="_blank">GitHub</a></p>
+            <p class="copyright">Licensed under MIT License</p>
+        </footer>
     </div>
     <script src="dashboard.js"></script>
 </body>

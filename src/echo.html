@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="application/json; charset=utf-8">
+  <title>Echo Endpoint</title>
+</head>
+<body>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Get request body (for demo purposes, we'll simulate echo with dummy data)
+      const echoResponse = {
+        "echo": {
+          "message": "This is a simulated echo. In a real app, this would return your POST data.",
+          "data": {
+            "note": "Static HTML servers can't process POST requests without a backend"
+          }
+        },
+        "service": "Live Server"
+      };
+
+      // Clear any HTML
+      document.body.innerHTML = '';
+      
+      // Add JSON
+      document.body.textContent = JSON.stringify(echoResponse, null, 2);
+    });
+  </script>
+  <pre>
+{
+  "echo": {
+    "message": "This is a simulated echo. In a real app, this would return your POST data.",
+    "data": {
+      "note": "Static HTML servers can't process POST requests without a backend"
+    }
+  },
+  "service": "Live Server"
+}
+  </pre>
+</body>
+</html>

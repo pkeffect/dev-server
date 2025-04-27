@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="application/json; charset=utf-8">
+  <title>Health Check</title>
+</head>
+<body>
+  <script>
+    // Return health status as JSON
+    document.addEventListener('DOMContentLoaded', () => {
+      // Health response
+      const healthResponse = {
+        "status": "healthy",
+        "service": "Live Server"
+      };
+
+      // Clear any HTML
+      document.body.innerHTML = '';
+      
+      // Add JSON
+      document.body.textContent = JSON.stringify(healthResponse, null, 2);
+    });
+  </script>
+  <pre>
+{
+  "status": "healthy",
+  "service": "Live Server"
+}
+  </pre>
+</body>
+</html>

@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Service endpoints
     const services = {
-        'live-server': 'http://localhost:8081/api.html',  // Now pointing to the API HTML file
-        flask: 'http://localhost:8082',
+        'live-server': 'http://localhost:8081/api.html',
+        flask: 'http://localhost:8082/ping',  // Using simple ping endpoint for health checks
         fastapi: 'http://localhost:8083',
         nodejs: 'http://localhost:8084'
     };
@@ -34,7 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const startTime = performance.now();
             const response = await fetch(url, { 
                 method: 'GET',
-                mode: 'cors' 
+                mode: 'cors',
+                credentials: 'omit',
+                headers: {
+                    'Accept': 'application/json',
+                    'Cache-Control': 'no-cache'
+                },
+                timeout: 5000  // 5 second timeout
             });
             const endTime = performance.now();
             
@@ -46,10 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusElement.innerHTML = `<span class="dot"></span> Error: ${response.status}`;
                 statusElement.classList.add('offline');
                 statusElement.classList.remove('online');
+                console.error(`Service ${service} returned status: ${response.status}`);
             }
         } catch (error) {
             console.error(`Error checking service ${service}:`, error);
-            statusElement.innerHTML = `<span class="dot"></span> Offline`;
+            statusElement.innerHTML = `<span class="dot"></span> Offline (${error.message})`;
             statusElement.classList.add('offline');
             statusElement.classList.remove('online');
         }
@@ -57,11 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Check all services
     function checkAllServices() {
-        // Using the correct keys from services object
-        checkService('live-server', services['live-server']);
-        checkService('flask', services.flask);
-        checkService('fastapi', services.fastapi);
-        checkService('nodejs', services.nodejs);
+        for (const [service, url] of Object.entries(services)) {
+            checkService(service, url);
+        }
     }
 
     // Test a specific service and show response
@@ -86,7 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const startTime = performance.now();
             const response = await fetch(serviceUrl, { 
                 method: 'GET',
-                mode: 'cors' 
+                mode: 'cors',
+                credentials: 'omit',
+                headers: {
+                    'Accept': 'application/json',
+                    'Cache-Control': 'no-cache'
+                } 
             });
             const endTime = performance.now();
             
@@ -137,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         : responseText;
                     responseElement.innerHTML += `
                         <div class="response-content">
-                            <pre>${displayText}</pre>
+                            <pre>${escapeHtml(displayText)}</pre>
                         </div>
                     `;
                 }
@@ -163,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         : responseText;
                     responseElement.innerHTML += `
                         <div class="error-details">
-                            <pre>${displayText}</pre>
+                            <pre>${escapeHtml(displayText)}</pre>
                         </div>
                     `;
                 }
@@ -173,10 +183,23 @@ document.addEventListener('DOMContentLoaded', () => {
             responseElement.innerHTML = `
                 <div class="failure-message">Connection Failed ✗</div>
                 <div class="timestamp">${error.message}</div>
+                <div class="error-details">
+                    <p>This might indicate a CORS issue, network problem, or that the service is not running.</p>
+                </div>
             `;
             responseElement.classList.add('failure');
             responseElement.classList.remove('success');
         }
+    }
+
+    // Helper function to escape HTML
+    function escapeHtml(str) {
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
     }
 
     // Test all services
@@ -190,7 +213,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const startTime = performance.now();
                 const response = await fetch(url, { 
                     method: 'GET', 
-                    mode: 'cors'
+                    mode: 'cors',
+                    credentials: 'omit',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    }
                 });
                 const endTime = performance.now();
                 

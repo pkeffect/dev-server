@@ -3,37 +3,212 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Type" content="application/json; charset=utf-8">
-  <title>Live Server API</title>
-  <script>
-    // Immediately return JSON data
-    document.addEventListener('DOMContentLoaded', () => {
-      // API Response - hardcoded for reliability
-      const apiResponse = {
+  <title>Live Server API Documentation</title>
+  <!-- Swagger UI CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    .swagger-ui .topbar { display: none }
+    header {
+      background-color: #1a1a1a;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Live Server API Documentation</h1>
+  </header>
+
+  <div class="container">
+    <!-- API Response for direct API calls -->
+    <div id="api-response" style="display: none;">
+      {
         "message": "Hello from Live Server!",
         "service": "Live Server",
         "environment": "development",
         "version": "1.0.0"
-      };
+      }
+    </div>
 
-      // Clear any HTML
+    <!-- Swagger UI Container -->
+    <div id="swagger-ui"></div>
+  </div>
+
+  <!-- Swagger UI JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui-bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.3/swagger-ui-standalone-preset.min.js"></script>
+
+  <script>
+    // Check if this is an API call
+    const isApiCall = window.location.search.includes('api=true');
+    
+    if (isApiCall) {
+      // Return API response
       document.body.innerHTML = '';
-      
-      // Add the JSON as pre-formatted text
-      const pre = document.createElement('pre');
-      pre.textContent = JSON.stringify(apiResponse, null, 2);
-      document.body.appendChild(pre);
-    });
+      document.querySelector('head').innerHTML = '<meta http-equiv="Content-Type" content="application/json; charset=utf-8">';
+      const responseText = document.getElementById('api-response').textContent.trim();
+      document.body.textContent = responseText;
+    } else {
+      // Initialize Swagger UI
+      window.onload = function() {
+        const spec = {
+          openapi: "3.0.0",
+          info: {
+            title: "Live Server API",
+            version: "1.0.0",
+            description: "API documentation for the Live Server"
+          },
+          servers: [
+            {
+              url: window.location.origin,
+              description: "Live Server"
+            }
+          ],
+          paths: {
+            "/api.html": {
+              get: {
+                summary: "Root endpoint",
+                description: "Returns basic information about the service",
+                responses: {
+                  "200": {
+                    description: "Basic service information",
+                    content: {
+                      "application/json": {
+                        schema: {
+                          type: "object",
+                          properties: {
+                            message: {
+                              type: "string",
+                              example: "Hello from Live Server!"
+                            },
+                            service: {
+                              type: "string",
+                              example: "Live Server"
+                            },
+                            environment: {
+                              type: "string",
+                              example: "development"
+                            },
+                            version: {
+                              type: "string",
+                              example: "1.0.0"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "/health.html": {
+              get: {
+                summary: "Health check endpoint",
+                description: "Returns the health status of the service",
+                responses: {
+                  "200": {
+                    description: "Service health status",
+                    content: {
+                      "application/json": {
+                        schema: {
+                          type: "object",
+                          properties: {
+                            status: {
+                              type: "string",
+                              example: "healthy"
+                            },
+                            service: {
+                              type: "string",
+                              example: "Live Server"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "/echo.html": {
+              post: {
+                summary: "Echo endpoint",
+                description: "Returns the JSON sent in the request (simulated in static HTML)",
+                requestBody: {
+                  required: true,
+                  content: {
+                    "application/json": {
+                      schema: {
+                        type: "object",
+                        example: {
+                          message: "Hello world",
+                          data: {
+                            key: "value"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                responses: {
+                  "200": {
+                    description: "Echoed response",
+                    content: {
+                      "application/json": {
+                        schema: {
+                          type: "object",
+                          properties: {
+                            echo: {
+                              type: "object",
+                              example: {
+                                message: "Hello world",
+                                data: {
+                                  key: "value"
+                                }
+                              }
+                            },
+                            service: {
+                              type: "string",
+                              example: "Live Server"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        };
+
+        SwaggerUIBundle({
+          spec: spec,
+          dom_id: '#swagger-ui',
+          deepLinking: true,
+          presets: [
+            SwaggerUIBundle.presets.apis,
+            SwaggerUIStandalonePreset
+          ],
+          layout: "BaseLayout"
+        });
+      };
+    }
   </script>
-</head>
-<body>
-  <pre>
-{
-  "message": "Hello from Live Server!",
-  "service": "Live Server",
-  "environment": "development",
-  "version": "1.0.0"
-}
-  </pre>
 </body>
 </html>

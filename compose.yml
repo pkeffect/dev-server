@@ -32,25 +32,24 @@ services:
     build:
       context: .
     container_name: web_flask_dev
-    stdin_open: true # Keep stdin open
-    tty: true        # Allocate a pseudo-TTY
+    stdin_open: true
+    tty: true
     env_file:
-      - ./.env       # Load variables from a local .env file
+      - ./.env
     environment:
       - FLASK_ENV=development
       - PORT=8080
     ports:
-      - "8082:8080"  # Map host 8082 to container 8080
+      - "8082:8080"  # Make sure this binding is correct
     volumes:
       - .:/app:rw
-    command: ["gunicorn", "-w", "1", "--bind", "0.0.0.0:8080", "--reload", "app_flask:app"]
+    command: ["gunicorn", "--bind", "0.0.0.0:8080", "--reload", "app_flask:app"]
     healthcheck:
-      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/ping"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
-    init: true       # Use an init system like tini    
     restart: unless-stopped
     networks:
       - dev-network

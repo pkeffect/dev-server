@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Connectivity Debug</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .service-test {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+        }
+        .buttons {
+            margin: 15px 0;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+        pre {
+            background-color: #f1f2f6;
+            padding: 10px;
+            border-radius: 4px;
+            overflow: auto;
+        }
+        .success {
+            color: #2ecc71;
+        }
+        .failure {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Service Connectivity Debug</h1>
+    <p>This page helps troubleshoot connectivity issues between services.</p>
+
+    <div class="service-test">
+        <h2>Flask API (Port 8082)</h2>
+        <div class="buttons">
+            <button class="button" onclick="testService('http://localhost:8082', 'flask-results')">Test Root Endpoint</button>
+            <button class="button" onclick="testService('http://localhost:8082/ping', 'flask-results')">Test Ping Endpoint</button>
+            <button class="button" onclick="testService('http://localhost:8082/health', 'flask-results')">Test Health Endpoint</button>
+        </div>
+        <div id="flask-results">Results will appear here...</div>
+    </div>
+
+    <div class="service-test">
+        <h2>FastAPI (Port 8083)</h2>
+        <div class="buttons">
+            <button class="button" onclick="testService('http://localhost:8083', 'fastapi-results')">Test Root Endpoint</button>
+            <button class="button" onclick="testService('http://localhost:8083/health', 'fastapi-results')">Test Health Endpoint</button>
+        </div>
+        <div id="fastapi-results">Results will appear here...</div>
+    </div>
+
+    <div class="service-test">
+        <h2>Node.js Express (Port 8084)</h2>
+        <div class="buttons">
+            <button class="button" onclick="testService('http://localhost:8084', 'nodejs-results')">Test Root Endpoint</button>
+            <button class="button" onclick="testService('http://localhost:8084/health', 'nodejs-results')">Test Health Endpoint</button>
+        </div>
+        <div id="nodejs-results">Results will appear here...</div>
+    </div>
+
+    <div class="service-test">
+        <h2>CORS Test</h2>
+        <p>Test if CORS is properly configured for cross-origin requests.</p>
+        <div class="buttons">
+            <button class="button" onclick="testCORS('http://localhost:8082', 'cors-results')">Test Flask CORS</button>
+            <button class="button" onclick="testCORS('http://localhost:8083', 'cors-results')">Test FastAPI CORS</button>
+            <button class="button" onclick="testCORS('http://localhost:8084', 'cors-results')">Test Node.js CORS</button>
+        </div>
+        <div id="cors-results">Results will appear here...</div>
+    </div>
+
+    <script>
+        async function testService(url, resultId) {
+            const resultElement = document.getElementById(resultId);
+            resultElement.innerHTML = '<p>Testing connection to ' + url + '...</p>';
+            
+            try {
+                const startTime = performance.now();
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    }
+                });
+                const endTime = performance.now();
+                const responseTime = Math.round(endTime - startTime);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultElement.innerHTML = `
+                        <p class="success">✓ Connection successful (${responseTime}ms)</p>
+                        <p>Status: ${response.status} ${response.statusText}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultElement.innerHTML = `
+                        <p class="failure">✗ Connection failed with status: ${response.status} ${response.statusText} (${responseTime}ms)</p>
+                    `;
+                }
+            } catch (error) {
+                resultElement.innerHTML = `
+                    <p class="failure">✗ Connection error: ${error.message}</p>
+                    <p>This might indicate a CORS issue, network problem, or that the service is not running.</p>
+                `;
+            }
+        }
+        
+        async function testCORS(url, resultId) {
+            const resultElement = document.getElementById(resultId);
+            resultElement.innerHTML = '<p>Testing CORS for ' + url + '...</p>';
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Origin': window.location.origin
+                    }
+                });
+                
+                if (response.ok) {
+                    const corsHeaders = {
+                        'Access-Control-Allow-Origin': response.headers.get('Access-Control-Allow-Origin'),
+                        'Access-Control-Allow-Methods': response.headers.get('Access-Control-Allow-Methods'),
+                        'Access-Control-Allow-Headers': response.headers.get('Access-Control-Allow-Headers')
+                    };
+                    
+                    resultElement.innerHTML = `
+                        <p class="success">✓ CORS is properly configured</p>
+                        <p>CORS Headers:</p>
+                        <pre>${JSON.stringify(corsHeaders, null, 2)}</pre>
+                    `;
+                } else {
+                    resultElement.innerHTML = `
+                        <p class="failure">✗ Request failed with status: ${response.status} ${response.statusText}</p>
+                    `;
+                }
+            } catch (error) {
+                resultElement.innerHTML = `
+                    <p class="failure">✗ CORS test failed: ${error.message}</p>
+                    <p>This likely indicates that CORS is not properly configured on the server.</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
