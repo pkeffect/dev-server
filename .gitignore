@@ -1,7 +1,7 @@
 # Git Ignore File for Multi-Server Development Environment
 
 # Environment variables
-.env
+#.env
 .env.*
 !.env.example
 
