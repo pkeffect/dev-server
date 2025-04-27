@@ -21,9 +21,13 @@
             padding: 15px;
             background-color: #f5f7fa;
             border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .buttons {
             margin: 15px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .button {
             display: inline-block;
@@ -35,19 +39,30 @@
             border: none;
             cursor: pointer;
             font-size: 14px;
-            margin-right: 8px;
+            transition: background-color 0.2s;
+        }
+        .button:hover {
+            background-color: #2980b9;
         }
         pre {
             background-color: #f1f2f6;
             padding: 10px;
             border-radius: 4px;
             overflow: auto;
+            max-height: 300px;
         }
         .success {
             color: #2ecc71;
         }
         .failure {
             color: #e74c3c;
+        }
+        .response-container {
+            border-left: 4px solid #ddd;
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 0 4px 4px 0;
         }
     </style>
 </head>
@@ -56,45 +71,86 @@
     <p>This page helps troubleshoot connectivity issues between services.</p>
 
     <div class="service-test">
+        <h2>Live Server (Port 8081)</h2>
+        <div class="buttons">
+            <button class="button" onclick="testService('http://localhost:8081/api.html', 'live-server-results')">Test API Endpoint</button>
+            <button class="button" onclick="testService('http://localhost:8081/health.html', 'live-server-results')">Test Health Endpoint</button>
+            <button class="button" onclick="testService('http://localhost:8081/echo.html', 'live-server-results')">Test Echo Endpoint</button>
+        </div>
+        <div id="live-server-results" class="response-container">Results will appear here...</div>
+    </div>
+
+    <div class="service-test">
         <h2>Flask API (Port 8082)</h2>
         <div class="buttons">
-            <button class="button" onclick="testService('http://localhost:8082', 'flask-results')">Test Root Endpoint</button>
+            <button class="button" onclick="testService('http://localhost:8082/', 'flask-results')">Test Root Endpoint (/)</button>
+            <button class="button" onclick="testService('http://localhost:8082/api/', 'flask-results')">Test API Endpoint</button>
             <button class="button" onclick="testService('http://localhost:8082/ping', 'flask-results')">Test Ping Endpoint</button>
             <button class="button" onclick="testService('http://localhost:8082/health', 'flask-results')">Test Health Endpoint</button>
         </div>
-        <div id="flask-results">Results will appear here...</div>
+        <div id="flask-results" class="response-container">Results will appear here...</div>
     </div>
 
     <div class="service-test">
         <h2>FastAPI (Port 8083)</h2>
         <div class="buttons">
-            <button class="button" onclick="testService('http://localhost:8083', 'fastapi-results')">Test Root Endpoint</button>
+            <button class="button" onclick="testService('http://localhost:8083/', 'fastapi-results')">Test Root Endpoint</button>
+            <button class="button" onclick="testService('http://localhost:8083/ping', 'fastapi-results')">Test Ping Endpoint</button>
             <button class="button" onclick="testService('http://localhost:8083/health', 'fastapi-results')">Test Health Endpoint</button>
         </div>
-        <div id="fastapi-results">Results will appear here...</div>
+        <div id="fastapi-results" class="response-container">Results will appear here...</div>
     </div>
 
     <div class="service-test">
         <h2>Node.js Express (Port 8084)</h2>
         <div class="buttons">
-            <button class="button" onclick="testService('http://localhost:8084', 'nodejs-results')">Test Root Endpoint</button>
+            <button class="button" onclick="testService('http://localhost:8084/', 'nodejs-results')">Test Root Endpoint</button>
+            <button class="button" onclick="testService('http://localhost:8084/ping', 'nodejs-results')">Test Ping Endpoint</button>
             <button class="button" onclick="testService('http://localhost:8084/health', 'nodejs-results')">Test Health Endpoint</button>
         </div>
-        <div id="nodejs-results">Results will appear here...</div>
+        <div id="nodejs-results" class="response-container">Results will appear here...</div>
     </div>
 
     <div class="service-test">
         <h2>CORS Test</h2>
         <p>Test if CORS is properly configured for cross-origin requests.</p>
         <div class="buttons">
-            <button class="button" onclick="testCORS('http://localhost:8082', 'cors-results')">Test Flask CORS</button>
-            <button class="button" onclick="testCORS('http://localhost:8083', 'cors-results')">Test FastAPI CORS</button>
-            <button class="button" onclick="testCORS('http://localhost:8084', 'cors-results')">Test Node.js CORS</button>
+            <button class="button" onclick="testCORS('http://localhost:8081/api.html', 'cors-results')">Test Live Server CORS</button>
+            <button class="button" onclick="testCORS('http://localhost:8082/ping', 'cors-results')">Test Flask CORS</button>
+            <button class="button" onclick="testCORS('http://localhost:8083/', 'cors-results')">Test FastAPI CORS</button>
+            <button class="button" onclick="testCORS('http://localhost:8084/', 'cors-results')">Test Node.js CORS</button>
         </div>
-        <div id="cors-results">Results will appear here...</div>
+        <div id="cors-results" class="response-container">Results will appear here...</div>
+    </div>
+
+    <div class="service-test">
+        <h2>Cross-Service Communication Test</h2>
+        <p>Test if services can communicate with each other (simulated from browser).</p>
+        <div class="buttons">
+            <button class="button" onclick="testCrossService('live-server', 'flask', 'cross-results')">Live Server → Flask</button>
+            <button class="button" onclick="testCrossService('live-server', 'fastapi', 'cross-results')">Live Server → FastAPI</button>
+            <button class="button" onclick="testCrossService('live-server', 'nodejs', 'cross-results')">Live Server → Node.js</button>
+            <button class="button" onclick="testCrossService('flask', 'live-server', 'cross-results')">Flask → Live Server</button>
+            <button class="button" onclick="testCrossService('flask', 'fastapi', 'cross-results')">Flask → FastAPI</button>
+            <button class="button" onclick="testCrossService('flask', 'nodejs', 'cross-results')">Flask → Node.js</button>
+            <button class="button" onclick="testCrossService('fastapi', 'live-server', 'cross-results')">FastAPI → Live Server</button>
+            <button class="button" onclick="testCrossService('fastapi', 'flask', 'cross-results')">FastAPI → Flask</button>
+            <button class="button" onclick="testCrossService('fastapi', 'nodejs', 'cross-results')">FastAPI → Node.js</button>
+            <button class="button" onclick="testCrossService('nodejs', 'live-server', 'cross-results')">Node.js → Live Server</button>
+            <button class="button" onclick="testCrossService('nodejs', 'flask', 'cross-results')">Node.js → Flask</button>
+            <button class="button" onclick="testCrossService('nodejs', 'fastapi', 'cross-results')">Node.js → FastAPI</button>
+        </div>
+        <div id="cross-results" class="response-container">Results will appear here...</div>
     </div>
 
     <script>
+        // Helper function to escape HTML
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
         async function testService(url, resultId) {
             const resultElement = document.getElementById(resultId);
             resultElement.innerHTML = '<p>Testing connection to ' + url + '...</p>';
@@ -111,17 +167,75 @@
                 const endTime = performance.now();
                 const responseTime = Math.round(endTime - startTime);
                 
+                // Get the response text first
+                const responseText = await response.text();
+                
+                // Try to parse as JSON if it looks like JSON
+                let isJson = false;
+                let jsonData = null;
+                
+                try {
+                    // Check if response looks like JSON (starts with { or [)
+                    if (responseText.trim().startsWith('{') || responseText.trim().startsWith('[')) {
+                        jsonData = JSON.parse(responseText);
+                        isJson = true;
+                    }
+                } catch (e) {
+                    // Not JSON or invalid JSON
+                    isJson = false;
+                }
+                
+                // For live server, try to extract JSON from pre tags if present
+                let extractedJson = null;
+                if (!isJson && url.includes('8081') && responseText.includes('<pre>')) {
+                    try {
+                        const preMatch = responseText.match(/<pre>([\s\S]*?)<\/pre>/);
+                        if (preMatch && preMatch[1]) {
+                            const preContent = preMatch[1].trim();
+                            if (preContent.startsWith('{') || preContent.startsWith('[')) {
+                                extractedJson = JSON.parse(preContent);
+                                isJson = true;
+                                jsonData = extractedJson;
+                            }
+                        }
+                    } catch (e) {
+                        // Failed to extract JSON from pre tags
+                    }
+                }
+                
+                // Display appropriate response based on content type and status
                 if (response.ok) {
-                    const data = await response.json();
-                    resultElement.innerHTML = `
-                        <p class="success">✓ Connection successful (${responseTime}ms)</p>
-                        <p>Status: ${response.status} ${response.statusText}</p>
-                        <pre>${JSON.stringify(data, null, 2)}</pre>
-                    `;
+                    if (isJson) {
+                        resultElement.innerHTML = `
+                            <p class="success">✓ Connection successful (${responseTime}ms)</p>
+                            <p>Status: ${response.status} ${response.statusText}</p>
+                            <pre>${JSON.stringify(jsonData, null, 2)}</pre>
+                        `;
+                    } else {
+                        // Limit text length for display if it's HTML
+                        const displayText = responseText.length > 500 
+                            ? responseText.substring(0, 500) + '...' 
+                            : responseText;
+                        
+                        resultElement.innerHTML = `
+                            <p class="success">✓ Connection successful (${responseTime}ms)</p>
+                            <p>Status: ${response.status} ${response.statusText}</p>
+                            <p>Content type: ${response.headers.get('content-type') || 'Not specified'}</p>
+                            <pre>${escapeHtml(displayText)}</pre>
+                        `;
+                    }
                 } else {
-                    resultElement.innerHTML = `
-                        <p class="failure">✗ Connection failed with status: ${response.status} ${response.statusText} (${responseTime}ms)</p>
-                    `;
+                    if (isJson) {
+                        resultElement.innerHTML = `
+                            <p class="failure">✗ Connection failed with status: ${response.status} ${response.statusText} (${responseTime}ms)</p>
+                            <pre>${JSON.stringify(jsonData, null, 2)}</pre>
+                        `;
+                    } else {
+                        resultElement.innerHTML = `
+                            <p class="failure">✗ Connection failed with status: ${response.status} ${response.statusText} (${responseTime}ms)</p>
+                            <pre>${escapeHtml(responseText)}</pre>
+                        `;
+                    }
                 }
             } catch (error) {
                 resultElement.innerHTML = `
@@ -166,6 +280,114 @@
                 resultElement.innerHTML = `
                     <p class="failure">✗ CORS test failed: ${error.message}</p>
                     <p>This likely indicates that CORS is not properly configured on the server.</p>
+                `;
+            }
+        }
+        
+        // Simulate cross-service communication
+        async function testCrossService(from, to, resultId) {
+            const resultElement = document.getElementById(resultId);
+            resultElement.innerHTML = `<p>Testing communication from ${from} to ${to}...</p>`;
+            
+            const serviceUrls = {
+                'live-server': 'http://localhost:8081/api.html',
+                'flask': 'http://localhost:8082/ping',
+                'fastapi': 'http://localhost:8083/ping',
+                'nodejs': 'http://localhost:8084/ping'
+            };
+            
+            const serviceContainerNames = {
+                'live-server': 'live-server-dev',
+                'flask': 'flask-dev',
+                'fastapi': 'fastapi-dev',
+                'nodejs': 'node-dev'
+            };
+            
+            const fromUrl = serviceUrls[from];
+            const toUrl = serviceUrls[to];
+            
+            if (!fromUrl || !toUrl) {
+                resultElement.innerHTML = `
+                    <p class="failure">✗ Configuration error: Unknown service</p>
+                `;
+                return;
+            }
+            
+            try {
+                const startTime = performance.now();
+                // Make the request to the target URL
+                const response = await fetch(toUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Forwarded-From': serviceContainerNames[from],
+                        'Cache-Control': 'no-cache'
+                    }
+                });
+                const endTime = performance.now();
+                const responseTime = Math.round(endTime - startTime);
+                
+                // Get response text first
+                const responseText = await response.text();
+                
+                // Try to parse as JSON
+                let jsonData = null;
+                let isJson = false;
+                
+                try {
+                    if (responseText.trim().startsWith('{') || responseText.trim().startsWith('[')) {
+                        jsonData = JSON.parse(responseText);
+                        isJson = true;
+                    }
+                } catch (e) {
+                    // Not JSON or invalid JSON
+                }
+                
+                // For live server, try to extract JSON from pre tags if present
+                if (!isJson && toUrl.includes('8081') && responseText.includes('<pre>')) {
+                    try {
+                        const preMatch = responseText.match(/<pre>([\s\S]*?)<\/pre>/);
+                        if (preMatch && preMatch[1]) {
+                            const preContent = preMatch[1].trim();
+                            if (preContent.startsWith('{') || preContent.startsWith('[')) {
+                                jsonData = JSON.parse(preContent);
+                                isJson = true;
+                            }
+                        }
+                    } catch (e) {
+                        // Failed to extract JSON from pre tags
+                    }
+                }
+                
+                if (response.ok) {
+                    if (isJson) {
+                        resultElement.innerHTML = `
+                            <p class="success">✓ Communication successful (${responseTime}ms)</p>
+                            <p>From: ${from} (${serviceContainerNames[from]})</p>
+                            <p>To: ${to} (${serviceContainerNames[to]})</p>
+                            <pre>${JSON.stringify(jsonData, null, 2)}</pre>
+                        `;
+                    } else {
+                        resultElement.innerHTML = `
+                            <p class="success">✓ Communication successful (${responseTime}ms)</p>
+                            <p>From: ${from} (${serviceContainerNames[from]})</p>
+                            <p>To: ${to} (${serviceContainerNames[to]})</p>
+                            <pre>${escapeHtml(responseText.substring(0, 200))}${responseText.length > 200 ? '...' : ''}</pre>
+                        `;
+                    }
+                } else {
+                    resultElement.innerHTML = `
+                        <p class="failure">✗ Communication failed with status: ${response.status} ${response.statusText} (${responseTime}ms)</p>
+                        <p>From: ${from} (${serviceContainerNames[from]})</p>
+                        <p>To: ${to} (${serviceContainerNames[to]})</p>
+                        <pre>${escapeHtml(responseText.substring(0, 200))}${responseText.length > 200 ? '...' : ''}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultElement.innerHTML = `
+                    <p class="failure">✗ Communication error: ${error.message}</p>
+                    <p>From: ${from} (${serviceContainerNames[from]})</p>
+                    <p>To: ${to} (${serviceContainerNames[to]})</p>
                 `;
             }
         }

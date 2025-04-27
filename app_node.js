@@ -145,6 +145,13 @@ app.post('/echo', (req, res) => {
   });
 });
 
+app.get('/ping', (req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'Node.js Express API'
+  });
+});
+
 app.listen(port, '0.0.0.0', () => {
   console.log(`Node.js Express server listening on port ${port}`);
 });
