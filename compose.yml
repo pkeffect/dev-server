@@ -3,8 +3,8 @@ services:
     build:
       context: .
     container_name: web_live_server_dev
-    stdin_open: true # Keep stdin open
-    tty: true        # Allocate a pseudo-TTY    
+    stdin_open: true
+    tty: true 
     ports:
       - "8081:8080"
     volumes:
@@ -23,7 +23,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
-    init: true       # Use an init system like tini    
+    init: true 
     restart: unless-stopped
     networks:
       - dev-network
@@ -40,7 +40,7 @@ services:
       - FLASK_ENV=development
       - PORT=8080
     ports:
-      - "8082:8080"  # Make sure this binding is correct
+      - "8082:8080"
     volumes:
       - .:/app:rw
     command: ["gunicorn", "--bind", "0.0.0.0:8080", "--reload", "app_flask:app"]
@@ -58,15 +58,15 @@ services:
     build:
       context: .
     container_name: web_fastapi_dev
-    stdin_open: true # Keep stdin open
-    tty: true        # Allocate a pseudo-TTY
+    stdin_open: true
+    tty: true
     env_file:
-      - ./.env       # Load variables from a local .env file
+      - ./.env
     environment:
       - FLASK_ENV=development
       - PORT=8080
     ports:
-      - "8083:8080"  # Map host 8083 to container 8080
+      - "8083:8080"
     volumes:
       - .:/app:rw
     command: ["uvicorn", "app_fastapi:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
@@ -76,7 +76,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
-    init: true       # Use an init system like tini    
+    init: true  
     restart: unless-stopped
     networks:
       - dev-network
@@ -85,13 +85,15 @@ services:
     build:
       context: .
     container_name: web_node_dev
+    stdin_open: true
+    tty: true    
     env_file:
-      - ./.env       # Load variables from a local .env file
+      - ./.env 
     environment:
       - NODE_ENV=development
       - PORT=8080
     ports:
-      - "8084:8080"  # Map host 8084 to container 8080
+      - "8084:8080"
     volumes:
       - .:/app:rw
       - /app/node_modules
@@ -102,7 +104,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
-    init: true       # Use an init system like tini    
+    init: true
     restart: unless-stopped
     networks:
       - dev-network
@@ -111,6 +113,8 @@ services:
 #  nginx:
 #    image: nginx:alpine
 #    container_name: web_proxy
+#    stdin_open: true
+#    tty: true
 #    ports:
 #      - "8080:80"
 #    volumes:
