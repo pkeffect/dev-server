@@ -1,0 +1,122 @@
+<header>
+    <div class="header-container">
+        <!-- Left side: Logo and main navigation -->
+        <div class="header-left">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                <h1>Web Template</h1>
+            </div>
+            
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="/" class="active">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- Center: Secondary navigation (like GitHub's) -->
+        <div class="header-center desktop-only">
+            <nav class="secondary-nav">
+                <ul>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle">
+                            <svg class="icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <path fill="currentColor" d="M8 0a8 8 0 0 0-2.5 15.6c.4 0 .5-.2.5-.4v-1.5c-2 .4-2.5-.5-2.7-1 0-.1-.5-.9-.8-1-.3-.2-.7-.6 0-.6.6 0 1 .6 1.2.8.7 1.2 1.9 1 2.4.7 0-.5.2-.9.5-1-1.8-.2-3.6-.9-3.6-4 0-.9.3-1.6.8-2.2 0-.2-.3-1 .1-2 0 0 .7-.3 2.2.7a7.4 7.4 0 0 1 4 0c1.5-1 2.2-.8 2.2-.8.5 1.1.2 2 .1 2.1.5.6.8 1.3.8 2.2 0 3.1-1.9 3.7-3.7 4 .3.2.5.7.5 1.4v2.2c0 .2.1.5.5.4A8 8 0 0 0 16 8a8 8 0 0 0-8-8z"/>
+                            </svg>
+                            Projects
+                            <svg class="caret" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <path fill="currentColor" d="M4.5 6l3.5 3.5L11.5 6H4.5z"/>
+                            </svg>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="#">Project 1</a>
+                            <a href="#">Project 2</a>
+                            <a href="#">Project 3</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#">View All Projects</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle">
+                            <svg class="icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <path fill="currentColor" d="M8 9.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+                                <path fill="currentColor" d="M8 0a8 8 0 100 16A8 8 0 008 0zm1.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
+                            </svg>
+                            Resources
+                            <svg class="caret" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <path fill="currentColor" d="M4.5 6l3.5 3.5L11.5 6H4.5z"/>
+                            </svg>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="#">Documentation</a>
+                            <a href="#">Tutorials</a>
+                            <a href="#">API Reference</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#">Community</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- Right side: Search, notifications, theme toggle -->
+        <div class="header-right">
+            <!-- Search bar -->
+            <div class="search-container">
+                <form action="/search" method="get">
+                    <input type="text" placeholder="Search..." name="q" class="search-input">
+                    <button type="submit" class="search-button">
+                        <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Notification icon (placeholder) -->
+            <button class="icon-button" aria-label="Notifications">
+                <svg class="icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M8 16a2 2 0 002-2H6a2 2 0 002 2zm.995-14.901a1 1 0 10-1.99 0A5.002 5.002 0 003 8c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                </svg>
+            </button>
+            
+            <!-- Theme toggle -->
+            <button id="theme-toggle" class="icon-button" aria-label="Toggle theme">
+                <!-- Moon icon (shows in light mode) -->
+                <svg id="dark-icon" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/>
+                </svg>
+                <!-- Sun icon (shows in dark mode) -->
+                <svg id="light-icon" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>
+                </svg>
+            </button>
+            
+            <!-- User profile (placeholder) -->
+            <div class="dropdown">
+                <button class="icon-button dropdown-toggle" aria-label="User menu">
+                    <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2a7.2 7.2 0 01-6-3.22c.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08a7.2 7.2 0 01-6 3.22z"/>
+                    </svg>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a href="#">Profile</a>
+                    <a href="#">Settings</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#">Sign out</a>
+                </div>
+            </div>
+            
+            <!-- Mobile menu toggle -->
+            <button id="mobile-menu-toggle" class="icon-button mobile-only" aria-label="Menu">
+                <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</header>

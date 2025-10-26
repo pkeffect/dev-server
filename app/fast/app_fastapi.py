@@ -48,8 +48,5 @@ async def health_check():
 async def echo(data: EchoRequest):
     return {"echo": data.dict(), "service": "FastAPI"}
 
-@app.get("/ping")
-async def ping():
-    return {"status": "ok", "service": "FastAPI"}
-    
+
 # Uvicorn will run this, so no uvicorn.run() here.

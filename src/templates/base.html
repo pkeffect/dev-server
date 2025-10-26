@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="text-size-adjust" content="100%">
+    <meta name="-webkit-text-size-adjust" content="100%">
+    <title>{% block title %}Web Template{% endblock %}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <!-- Loading CSS first to ensure loading screen appears immediately -->
+    <link rel="stylesheet" href="/css/loading.css">
+    <!-- CSS files -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/utilities.css">
+    <link rel="stylesheet" href="/css/dark-theme.css" id="theme-style">
+    <!-- Loading JS to handle the loading screen -->
+    <script src="/js/loading.js"></script>
+    <!-- Additional head content -->
+    {% block head %}{% endblock %}
+</head>
+<body class="loading">
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading...</div>
+        <div class="loading-progress">
+            <div class="loading-progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    {% include 'header.html' %}
+    
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    {% include 'footer.html' %}
+
+    <!-- Alert Notification -->
+    <div id="alert" class="success">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span id="alert-message">Alert message goes here</span>
+        <button>
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- JavaScript - Added at the end to ensure DOM is loaded first -->
+    <script src="/js/theme.js"></script>
+    <script src="/js/main.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

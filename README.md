@@ -11,7 +11,9 @@
 A containerized development environment for testing and developing applications across multiple server technologies simultaneously. This project provides hot-reloading development servers for HTML/CSS/JS, Python (Flask and FastAPI), and Node.js Express, all running in Docker containers with a unified dashboard for monitoring.
 
 <div align="center">
-<img src="https://github.com/pkeffect/poc/blob/main/img/dashboard.png" alt="Main Interface" width="600">
+
+![Dashboard Preview](https://via.placeholder.com/800x400?text=Development+Environment+Dashboard)
+
 </div>
 
 ## 📋 Table of Contents
@@ -20,6 +22,7 @@ A containerized development environment for testing and developing applications 
 - [Architecture](#-architecture)
 - [Quick Start](#-quick-start)
 - [Service Access Points](#-service-access-points)
+- [UI Features](#-ui-features)
 - [Development Workflow](#-development-workflow)
 - [API Documentation](#-api-documentation)
 - [Testing](#-testing)
@@ -33,17 +36,18 @@ A containerized development environment for testing and developing applications 
 
 ## ✨ Features
 
-- **📦 Cross-platform compatibility**: All services run in Docker containers
-- **🔄 Hot reloading**: All servers automatically reload when code changes
-- **📊 Unified dashboard**: Monitor all services in one interface
-- **🔌 Standardized API endpoints**: Common patterns across all server implementations
-- **🌐 CORS enabled**: All services configured for cross-origin requests
-- **💓 Health checks**: Docker health checks implemented for all services
-- **🔄 Reverse proxy (optional)**: Nginx configuration for unified routing
-- **🧪 API testing tools**: Scripts for validating service functionality
-- **💪 Resource management**: Docker container resource limits for stable performance
-- **🔀 Git workflow**: Complete Git configuration with hooks, templates, and CI/CD
-- **🚢 Comprehensive CI/CD**: Automated testing and deployment with GitHub Actions
+- **Beautiful UI**: Dark and light theme with modern component library
+- **Cross-platform compatibility**: All services run in Docker containers
+- **Hot reloading**: All servers automatically reload when code changes
+- **Unified dashboard**: Monitor all services in one interface
+- **Standardized API endpoints**: Common patterns across all server implementations
+- **CORS enabled**: All services configured for cross-origin requests
+- **Health checks**: Docker health checks implemented for all services
+- **API testing tools**: Built-in interface for testing endpoints
+- **Theme switching**: Toggle between dark and light themes with persistent preferences
+- **Loading screen**: Smooth page load experience with animated loading indicator
+- **Responsive Layout**: Mobile-friendly design with adaptive components
+- **Git workflow**: Complete Git configuration with hooks, templates, and CI/CD
 
 ## 🏗️ Architecture
 
@@ -120,7 +124,7 @@ The development environment consists of the following components:
 
 4. Build and start all services:
    ```bash
-   docker compose up --build
+   docker-compose up --build
    ```
 
 5. Access the dashboard:
@@ -128,18 +132,31 @@ The development environment consists of the following components:
 
 ## 🔌 Service Access Points
 
+<details>
+<summary>Click to expand all service endpoints</summary>
+
 - **Dashboard**: [http://localhost:8081](http://localhost:8081)
 - **Live Server API**: [http://localhost:8081/api.html](http://localhost:8081/api.html)
 - **Flask API**: [http://localhost:8082](http://localhost:8082)
-  - Documentation: [http://localhost:8082/docs](http://localhost:8082/docs)
 - **FastAPI**: [http://localhost:8083](http://localhost:8083)
   - OpenAPI Documentation: [http://localhost:8083/docs](http://localhost:8083/docs)
 - **Node.js Express**: [http://localhost:8084](http://localhost:8084)
-  - Swagger Documentation: [http://localhost:8084/docs](http://localhost:8084/docs)
 - **Unified Access** (if using Nginx): [http://localhost:8080](http://localhost:8080)
   - Flask API: [http://localhost:8080/flask](http://localhost:8080/flask)
   - FastAPI: [http://localhost:8080/fastapi](http://localhost:8080/fastapi)
   - Node.js: [http://localhost:8080/node](http://localhost:8080/node)
+
+</details>
+
+## 🎨 UI Features
+
+- **Dark & Light Themes**: Toggle between themes with persistent preferences that respect system settings
+- **Modern UI Components**: Buttons, cards, alerts, badges, dropdowns, forms and more
+- **Loading Screen**: Smooth page load experience with animated loading indicator
+- **Responsive Layout**: Mobile-friendly design with adaptive components
+- **Interactive Dashboard**: Real-time service status monitoring
+- **API Testing Panel**: Built-in interface for testing endpoints across all services
+- **GitHub-Inspired Design**: Familiar, clean interface for developers
 
 ## 💻 Development Workflow
 
@@ -169,8 +186,21 @@ dev-environment/
 │   └── nginx.conf            # Reverse proxy setup
 ├── src/                      # Front-end source files
 │   ├── index.html            # Dashboard HTML
-│   ├── styles.css            # Dashboard styles
-│   ├── dashboard.js          # Dashboard JavaScript
+│   ├── css/                  # CSS styles
+│   │   ├── main.css          # Main shared styles
+│   │   ├── components.css    # UI component styles
+│   │   ├── dark-theme.css    # Dark theme styles
+│   │   ├── light-theme.css   # Light theme styles
+│   │   ├── dashboard.css     # Dashboard-specific styles
+│   │   ├── utilities.css     # Utility classes
+│   │   └── loading.css       # Loading screen styles
+│   ├── js/                   # JavaScript files
+│   │   ├── main.js           # Main functionality
+│   │   ├── theme.js          # Theme switching logic
+│   │   ├── dashboard.js      # Dashboard functionality
+│   │   └── loading.js        # Loading screen manager
+│   ├── img/                  # Images directory
+│   │   └── icons/            # SVG icons
 │   └── api.html              # Live Server API endpoint
 └── tests/                    # Testing utilities
     ├── api_tests.sh          # Bash test suite
@@ -193,9 +223,38 @@ All code is mounted as volumes in the Docker containers, so changes to files wil
 - **Python**: Add to `requirements.txt` and restart the containers
 - **Node.js**: Add to `package.json` and restart the containers
 
+### Environment Variables
+
+Configure your development environment by editing the `.env` file:
+
+<details>
+<summary>View example environment configuration</summary>
+
+```
+# Server Configurations
+FLASK_ENV=development
+FLASK_DEBUG=1
+NODE_ENV=development
+
+# API Keys (for demonstration)
+DEMO_API_KEY=your_api_key_here
+
+# Database Configuration (if needed)
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=devdb
+DB_USER=devuser
+DB_PASSWORD=devpassword
+```
+
+</details>
+
 ## 📝 API Documentation
 
 All services implement the following standard endpoints:
+
+<details>
+<summary>View API endpoints</summary>
 
 ### Root Endpoint
 
@@ -254,12 +313,14 @@ Response:
 }
 ```
 
-### API Documentation Access
+</details>
 
-- **Flask**: [http://localhost:8082/docs](http://localhost:8082/docs)
-- **FastAPI**: [http://localhost:8083/docs](http://localhost:8083/docs)
-- **Node.js**: [http://localhost:8084/docs](http://localhost:8084/docs)
-- **Live Server**: [http://localhost:8081/api.html](http://localhost:8081/api.html)
+### FastAPI Documentation
+
+FastAPI automatically generates interactive API documentation:
+
+- **Swagger UI**: [http://localhost:8083/docs](http://localhost:8083/docs)
+- **ReDoc**: [http://localhost:8083/redoc](http://localhost:8083/redoc)
 
 ## 🧪 Testing
 
@@ -268,8 +329,12 @@ Response:
 The dashboard provides an interactive way to test all services:
 
 1. Open [http://localhost:8081](http://localhost:8081)
-2. Click "Test" buttons for individual services
+2. Use the "Test" buttons for individual services
 3. Click "Test All Services" for a comprehensive check
+4. Use the API Testing panel for custom endpoint tests
+
+<details>
+<summary>View command line testing options</summary>
 
 ### Command Line Testing
 
@@ -298,55 +363,64 @@ npm test
 
 ```bash
 # Run the Flask tests
-docker compose exec flask-dev pytest tests/test_flask.py
+docker-compose exec flask-dev pytest tests/test_flask.py
 
 # Run the FastAPI tests 
-docker compose exec fastapi-dev pytest
+docker-compose exec fastapi-dev pytest
 ```
 
+</details>
+
 ## 🐳 Managing Containers
+
+<details>
+<summary>View Docker management commands</summary>
 
 ### Starting Services
 
 ```bash
 # Start all services
-docker compose up
+docker-compose up
 
 # Start in detached mode
-docker compose up -d
+docker-compose up -d
 
 # Start a specific service
-docker compose up flask-dev
+docker-compose up flask-dev
 ```
 
 ### Stopping Services
 
 ```bash
 # Stop all services
-docker compose down
+docker-compose down
 
 # Stop and remove volumes
-docker compose down -v
+docker-compose down -v
 ```
 
 ### Viewing Logs
 
 ```bash
 # View logs from all services
-docker compose logs
+docker-compose logs
 
 # Follow logs
-docker compose logs -f
+docker-compose logs -f
 
 # View logs for a specific service
-docker compose logs flask-dev
+docker-compose logs flask-dev
 ```
+
+</details>
 
 ## 🚄 Performance Optimization
 
-### Resource Management
+This environment includes several performance optimizations:
 
-The services include CPU and memory limits to prevent resource contention:
+### FastAPI Resource Management
+
+The FastAPI service includes CPU and memory limits to prevent resource contention:
 
 ```yaml
 deploy:
@@ -359,28 +433,36 @@ deploy:
       memory: 128M
 ```
 
-### Worker Configuration
+### Optimized Asset Loading
 
-For production deployments, services can be configured with optimized worker settings:
+The dashboard implements:
+- Progressive loading of resources
+- Efficient theme switching without page reloads
+- Preloading of critical JavaScript
+- Optimized SVG icons
 
-```
-command: ["uvicorn", "app_fastapi:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "1", "--log-level", "warning"]
-```
+### Development vs. Production Settings
+
+For development, use the included hot-reload settings. For production, consider:
+
+1. Disabling hot-reload flags (`--reload`)
+2. Adjusting worker counts based on available CPU cores
+3. Setting appropriate logging levels
 
 ## 🔒 Security Considerations
 
 ### Container Security
 
-The Dockerfile includes sections for running containers as non-root users:
+The Dockerfile includes options for running containers as non-root users:
 
 ```dockerfile
-# Create non-root user and group
+# --- Create non-root user and group ---
 RUN addgroup -S dev-group && adduser -S dev-user -G dev-group
 
-# Change ownership of the application directory
+# --- Change ownership of the application directory ---
 RUN chown -R dev-user:dev-group /app
 
-# Switch to the non-root user
+# --- Switch to the non-root user ---
 USER dev-user
 ```
 
@@ -388,9 +470,27 @@ Uncomment these sections for improved container security in production.
 
 ### Environment Variables
 
-Store sensitive information in `.env` files and never commit them to version control.
+Ensure sensitive information is stored in `.env` files and never committed to version control. The `.gitignore` file excludes `.env` files by default:
+
+```
+# Environment variables
+.env
+.env.*
+!.env.example
+```
 
 ## 🔄 Git Configuration
+
+This project includes a complete Git workflow setup:
+
+- **`.gitignore`**: Comprehensive ignore patterns for development files
+- **`.gitattributes`**: Line ending normalization and file handling
+- **GitHub Workflows**: Automated CI/CD with GitHub Actions
+- **Issue & PR Templates**: Standardized formats for contributions
+- **Git Hooks**: Pre-commit validation for code quality
+
+<details>
+<summary>View Git setup instructions</summary>
 
 ### Setting Up Git Hooks
 
@@ -413,7 +513,12 @@ Follow the GitHub Flow branching strategy:
 
 For detailed instructions, see [GIT_SETUP.md](GIT_SETUP.md).
 
+</details>
+
 ## 🔧 Troubleshooting
+
+<details>
+<summary>View common issues and solutions</summary>
 
 ### Common Issues
 
@@ -421,28 +526,50 @@ For detailed instructions, see [GIT_SETUP.md](GIT_SETUP.md).
 
 Check the Docker logs:
 ```bash
-docker compose logs [service-name]
+docker-compose logs [service-name]
 ```
 
 #### Hot Reloading Not Working
 
 Ensure the correct volume mounts are in place and file permissions are correct:
 ```bash
-docker compose down
-docker compose up --build
+docker-compose down
+docker-compose up --build
 ```
 
 #### Cannot Access Service
 
 Verify the port mappings in `compose.yml` and check if the container is running:
 ```bash
-docker compose ps
+docker-compose ps
 ```
 
-#### Debug Tools
+#### Theme Switching Not Working
 
-Use the debug interface to diagnose connection issues:
-- [http://localhost:8081/debug.html](http://localhost:8081/debug.html)
+Check browser console for errors in theme.js. Local storage might be disabled or full.
+
+#### Live Server Test Failing
+
+Ensure the `src/api.html` file exists for the Live Server API endpoint. If the test still fails, check the browser console for CORS errors.
+
+#### CI Pipeline Failing
+
+Check the GitHub Actions logs for detailed error information. Common issues include:
+
+- Missing test files or incorrect paths
+- Import errors in Python tests
+- Timing issues with service startup
+
+### Health Checks
+
+Each service has built-in health checks that Docker uses to monitor container status:
+
+```bash
+# View container health
+docker ps
+```
+
+</details>
 
 ## 👥 Contributing
 

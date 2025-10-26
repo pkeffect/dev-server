@@ -1,9 +1,9 @@
 # Updated requirements.txt
-flask==2.2.5
-fastapi==0.115.7
+flask==3.1.2
+fastapi==0.120.0
 gunicorn==22.0.0
-requests==2.31.0
-uvicorn[standard]==0.34.0
-flask-cors==4.0.0
-pytest==8.0.1
-flask-restx==1.2.0
+requests==2.32.5
+uvicorn[standard]==0.38.0
+flask-cors==6.0.1
+pytest==8.4.2
+flasgger==0.9.7b2

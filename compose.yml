@@ -4,26 +4,20 @@ services:
       context: .
     container_name: web_live_server_dev
     stdin_open: true
-    tty: true 
+    tty: true    
     ports:
       - "8081:8080"
     volumes:
-      - ./src:/app/src:rw
+      - ./src:/app:rw # Mount src to /app for live-server
     command: >
-      sh -c "cd /app/src && \
-             live-server \
-               --port=8080 \
-               --host=0.0.0.0 \
-               --no-browser \
-               --watch=. \
-               --wait=100"
+      sh -c "live-server --port=8080 --host=0.0.0.0 --no-browser --watch=. --wait=100"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
-    init: true 
+    init: true
     restart: unless-stopped
     networks:
       - dev-network
@@ -42,14 +36,15 @@ services:
     ports:
       - "8082:8080"
     volumes:
-      - .:/app:rw
-    command: ["gunicorn", "--bind", "0.0.0.0:8080", "--reload", "app_flask:app"]
+      - ./app/flask:/app:rw # This now correctly mounts the folder containing app_flask.py
+    command: ["gunicorn", "-w", "1", "--bind", "0.0.0.0:8080", "--reload", "app_flask:app"]
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/ping"]
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
+    init: true
     restart: unless-stopped
     networks:
       - dev-network
@@ -68,36 +63,8 @@ services:
     ports:
       - "8083:8080"
     volumes:
-      - .:/app:rw
+      - ./app/fast:/app:rw # This now correctly mounts the folder containing app_fastapi.py
     command: ["uvicorn", "app_fastapi:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
-    healthcheck:
-      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    init: true  
-    restart: unless-stopped
-    networks:
-      - dev-network
-
-  node-dev:
-    build:
-      context: .
-    container_name: web_node_dev
-    stdin_open: true
-    tty: true    
-    env_file:
-      - ./.env 
-    environment:
-      - NODE_ENV=development
-      - PORT=8080
-    ports:
-      - "8084:8080"
-    volumes:
-      - .:/app:rw
-      - /app/node_modules
-    command: sh -c "npm install cors && npm run dev"
     healthcheck:
       test: ["CMD", "/usr/local/bin/healthcheck.sh"]
       interval: 30s
@@ -109,24 +76,32 @@ services:
     networks:
       - dev-network
 
-  # Optional reverse proxy service
-#  nginx:
-#    image: nginx:alpine
-#    container_name: web_proxy
-#    stdin_open: true
-#    tty: true
-#    ports:
-#      - "8080:80"
-#    volumes:
-#      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-#    depends_on:
-#      - live-server-dev
-#      - flask-dev
-#      - fastapi-dev
-#      - node-dev
-#    restart: unless-stopped
-#    networks:
-#      - dev-network
+  node-dev:
+    build:
+      context: .
+    container_name: web_node_dev
+    env_file:
+      - ./.env
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+    ports:
+      - "8084:8080"
+    volumes:
+      - ./app/node:/app:rw # This now correctly mounts the folder containing app_node.js
+      - /app/node_modules # This prevents the local node_modules from overwriting the container's
+    # CORRECTED: No need to run npm install on every start
+    command: ["npm", "run", "dev"]
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    init: true
+    restart: unless-stopped
+    networks:
+      - dev-network
 
 networks:
   dev-network:
