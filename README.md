@@ -107,7 +107,7 @@ The development environment consists of the following components:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/dev-environment.git
+   git clone https://github.com/pkeffect/dev-server.git
    cd dev-environment
    ```
 
